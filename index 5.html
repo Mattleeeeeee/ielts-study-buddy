@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Study Buddy 💖</title>
+<style>
+body{font-family:Arial;background:#f5f8ff;margin:0}
+.card{background:white;padding:15px;margin:10px;border-radius:15px}
+.word{font-size:28px;font-weight:bold;text-align:center}
+button{padding:10px;border:none;border-radius:10px;background:#ff7eb3;color:white}
+input{padding:10px;width:100%;border-radius:10px;border:1px solid #ccc}
+</style>
+</head>
+<body>
+
+<div class="card">
+<h2>💖 Flashcards</h2>
+<input id="search" placeholder="Search word..."/>
+</div>
+
+<div class="card" id="focus"></div>
+
+<div class="card">
+<button onclick="toggleList()">Toggle List</button>
+<div id="list"></div>
+</div>
+
+<script>
+let words = [];
+
+function generateWords(){
+    let base = ["analyze","benefit","approach","context","improve","method","research","specific","theory","variable"];
+    for(let i=0;i<5000;i++){
+        let w = base[i % base.length] + i;
+        words.push({
+            word:w,
+            def:"Definition of " + w,
+            zh:"翻譯 " + w
+        });
+    }
+}
+generateWords();
+
+let current = words[0];
+let visible = true;
+
+function render(){
+    document.getElementById("focus").innerHTML =
+        "<div class='word'>"+current.word+"</div>" +
+        "<p>"+current.def+"</p>" +
+        "<p>"+current.zh+"</p>";
+
+    let search = document.getElementById("search").value.toLowerCase();
+
+    let filtered = words.filter(w=>w.word.includes(search));
+
+    document.getElementById("list").innerHTML =
+        filtered.slice(0,100).map(w=>
+            "<div onclick='selectWord(""+w.word+"")'>"+w.word+"</div>"
+        ).join("");
+}
+
+function selectWord(w){
+    current = words.find(x=>x.word===w);
+    render();
+}
+
+function toggleList(){
+    visible=!visible;
+    document.getElementById("list").style.display = visible?"block":"none";
+}
+
+document.getElementById("search").oninput = render;
+
+render();
+</script>
+
+</body>
+</html>
